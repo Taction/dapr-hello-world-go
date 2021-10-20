@@ -70,15 +70,16 @@ func main() {
 	http.ListenAndServe(":8001", nil)
 }
 
-func getState(storeName string) (value string, metadata map[string]string, errStr string) {
+// todo errStr may transfer a int value represent for different state
+func getState(storeName string) (item *dapr.StateItem, errStr string) {
 	item, err := client.GetState(context.Background(), storeName, "order")
 	if err != nil {
-		return "", nil, fmt.Sprintf("failed to get state: %s", err)
+		return nil, fmt.Sprintf("failed to get state: %s", err)
 	}
 	if len(item.Value) > 0 {
-		return string(item.Value), item.Metadata, ""
+		return item, ""
 	} else {
-		return "", nil, "order Not Found"
+		return nil, "order Not Found"
 	}
 }
 
